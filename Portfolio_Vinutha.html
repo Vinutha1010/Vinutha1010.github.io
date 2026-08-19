@@ -30,8 +30,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
 
-    <!-- Canvas Confetti for Celebration Effects -->
+    <!-- Canvas Confetti & PDF.js Rendering Engine -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <style>
         :root {
@@ -1281,7 +1282,33 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow-y: auto;
+            padding: 1.2rem;
+        }
+
+        .cert-canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            width: 100%;
+            padding: 0.5rem 0;
+        }
+
+        .cert-pdf-canvas {
+            max-width: 100%;
+            height: auto !important;
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 182, 193, 0.18);
+            background: #ffffff;
+        }
+
+        .cert-modal-image {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
         }
 
         .cert-modal-iframe {
@@ -1289,7 +1316,18 @@
             height: 100%;
             min-height: 65vh;
             border: none;
+            border-radius: 10px;
             background: #ffffff;
+        }
+
+        .cert-modal-fallback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            color: var(--text-main);
         }
 
         .cert-loading-spinner {
@@ -1313,6 +1351,7 @@
         @media (max-width: 768px) {
             .cert-modal-body {
                 min-height: 55vh;
+                padding: 0.8rem;
             }
             .cert-modal-actions .hide-mobile {
                 display: none;
@@ -2099,12 +2138,22 @@
                     </button>
                 </div>
             </div>
-            <div class="cert-modal-body">
+            <div class="cert-modal-body" id="certModalBody">
                 <div id="certLoadingSpinner" class="cert-loading-spinner">
                     <i class="fa-solid fa-circle-notch fa-spin"></i>
-                    <span>Loading preview...</span>
+                    <span>Rendering certificate preview...</span>
                 </div>
-                <iframe id="certModalIframe" src="" class="cert-modal-iframe" title="Certificate Preview" onload="hideCertSpinner()"></iframe>
+                <div id="certCanvasContainer" class="cert-canvas-container" style="display: none;"></div>
+                <img id="certModalImage" class="cert-modal-image" src="" alt="Certificate Preview" style="display: none;">
+                <iframe id="certModalIframe" src="" class="cert-modal-iframe" title="Certificate Preview" style="display: none;" onload="hideCertSpinner()"></iframe>
+                <div id="certModalFallback" class="cert-modal-fallback" style="display: none;">
+                    <i class="fa-solid fa-file-pdf" style="font-size: 3.2rem; color: var(--pink-primary); margin-bottom: 0.8rem;"></i>
+                    <h4 style="font-size: 1.25rem; margin-bottom: 0.4rem; color: var(--text-main);">Official Certificate Document</h4>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.2rem;">Click below to open or download the full verified credential.</p>
+                    <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center;">
+                        <a id="certFallbackLink" href="#" target="_blank" class="btn btn-pink"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Certificate</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2621,16 +2670,23 @@
         }
 
         /* ==========================================================
-           8. CERTIFICATE MODAL VIEWER ENGINE
+           8. CERTIFICATE MODAL VIEWER ENGINE (PDF.JS & HYBRID FALLBACK)
            ========================================================== */
-        function openCertModal(title, issuer, filePath) {
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+
+        async function openCertModal(title, issuer, filePath) {
             const modal = document.getElementById('certModal');
             const modalTitle = document.getElementById('certModalTitle');
             const modalIssuer = document.getElementById('certModalIssuer');
-            const modalIframe = document.getElementById('certModalIframe');
             const modalNewTab = document.getElementById('certModalNewTab');
             const modalDownload = document.getElementById('certModalDownload');
             const spinner = document.getElementById('certLoadingSpinner');
+            const canvasContainer = document.getElementById('certCanvasContainer');
+            const iframeViewer = document.getElementById('certModalIframe');
+            const imageViewer = document.getElementById('certModalImage');
+            const fallbackBox = document.getElementById('certModalFallback');
 
             if (!modal) return;
 
@@ -2644,10 +2700,21 @@
                 modalDownload.setAttribute('download', filePath);
             }
 
+            // Reset viewer states
             if (spinner) spinner.style.display = 'flex';
-            if (modalIframe) {
-                modalIframe.src = encodedPath + '#toolbar=1&view=FitH';
+            if (canvasContainer) {
+                canvasContainer.innerHTML = '';
+                canvasContainer.style.display = 'none';
             }
+            if (iframeViewer) {
+                iframeViewer.src = '';
+                iframeViewer.style.display = 'none';
+            }
+            if (imageViewer) {
+                imageViewer.src = '';
+                imageViewer.style.display = 'none';
+            }
+            if (fallbackBox) fallbackBox.style.display = 'none';
 
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2655,11 +2722,95 @@
             // Micro-confetti celebration
             if (typeof confetti === 'function') {
                 confetti({
-                    particleCount: 25,
-                    spread: 50,
+                    particleCount: 30,
+                    spread: 60,
                     origin: { y: 0.65 },
                     colors: ['#FFB6C1', '#FF69B4', '#FFF0F5']
                 });
+            }
+
+            const isImage = /\.(png|jpe?g|webp|gif)$/i.test(filePath);
+
+            if (isImage) {
+                if (imageViewer) {
+                    imageViewer.src = encodedPath;
+                    imageViewer.onload = () => {
+                        if (spinner) spinner.style.display = 'none';
+                        imageViewer.style.display = 'block';
+                    };
+                    imageViewer.onerror = () => showCertFallback(encodedPath);
+                }
+                return;
+            }
+
+            // Try PDF.js Canvas Rendering for flawless cross-device visual display
+            let renderedWithPdfJs = false;
+            if (window.pdfjsLib) {
+                try {
+                    const loadingTask = pdfjsLib.getDocument(encodedPath);
+                    const pdfDoc = await loadingTask.promise;
+
+                    if (canvasContainer && pdfDoc.numPages > 0) {
+                        canvasContainer.innerHTML = '';
+                        canvasContainer.style.display = 'flex';
+
+                        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                            const page = await pdfDoc.getPage(pageNum);
+                            // Scale appropriately for sharp rendering
+                            const scale = window.innerWidth < 768 ? 1.0 : 1.4;
+                            const viewport = page.getViewport({ scale: scale });
+
+                            const canvas = document.createElement('canvas');
+                            canvas.className = 'cert-pdf-canvas';
+                            const context = canvas.getContext('2d');
+
+                            const outputScale = window.devicePixelRatio || 1;
+                            canvas.width = Math.floor(viewport.width * outputScale);
+                            canvas.height = Math.floor(viewport.height * outputScale);
+                            canvas.style.width = Math.floor(viewport.width) + "px";
+                            canvas.style.height = Math.floor(viewport.height) + "px";
+
+                            const transform = outputScale !== 1
+                                ? [outputScale, 0, 0, outputScale, 0, 0]
+                                : null;
+
+                            await page.render({
+                                canvasContext: context,
+                                transform: transform,
+                                viewport: viewport
+                            }).promise;
+
+                            canvasContainer.appendChild(canvas);
+                        }
+
+                        if (spinner) spinner.style.display = 'none';
+                        renderedWithPdfJs = true;
+                        return;
+                    }
+                } catch (pdfErr) {
+                    console.warn("PDF.js render encountered error, falling back to iframe:", pdfErr);
+                }
+            }
+
+            // Secondary Fallback: native iframe embed
+            if (!renderedWithPdfJs && iframeViewer) {
+                iframeViewer.style.display = 'block';
+                iframeViewer.src = encodedPath + '#toolbar=1&view=FitH';
+                // Timeout to check if iframe loaded or if fallback is needed
+                setTimeout(() => {
+                    if (spinner) spinner.style.display = 'none';
+                }, 1200);
+            }
+        }
+
+        function showCertFallback(path) {
+            const spinner = document.getElementById('certLoadingSpinner');
+            const fallbackBox = document.getElementById('certModalFallback');
+            const fallbackLink = document.getElementById('certFallbackLink');
+            if (spinner) spinner.style.display = 'none';
+            if (fallbackBox) {
+                fallbackBox.style.display = 'flex';
+                if (fallbackLink) fallbackLink.href = path;
             }
         }
 
@@ -2671,19 +2822,20 @@
         function closeCertModal() {
             const modal = document.getElementById('certModal');
             const modalIframe = document.getElementById('certModalIframe');
+            const canvasContainer = document.getElementById('certCanvasContainer');
             if (!modal) return;
 
             modal.classList.remove('active');
             document.body.style.overflow = '';
 
-            // Clean up iframe after transition
             setTimeout(() => {
                 if (modalIframe) modalIframe.src = '';
+                if (canvasContainer) canvasContainer.innerHTML = '';
             }, 300);
         }
 
         function handleCertModalBackdrop(e) {
-            if (e.target.id === 'certModal') {
+            if (e.target.id === 'certModal' || e.target.id === 'certModalBody') {
                 closeCertModal();
             }
         }
