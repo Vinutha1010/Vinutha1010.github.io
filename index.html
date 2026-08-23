@@ -465,53 +465,247 @@
             z-index: 2;
         }
 
-        /* Pulse Badge */
-        .pulse-badge {
+        /* ==========================================================
+           AVAILABILITY STATUS BADGE (STEP 1)
+           ========================================================== */
+        .availability-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.6rem;
-            background: rgba(255, 182, 193, 0.12);
-            border: 1px solid var(--pink-primary);
-            color: var(--pink-soft);
-            padding: 0.45rem 1.1rem;
+            gap: 0.65rem;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.45);
+            color: #E6FFFA;
+            padding: 0.45rem 1.15rem;
             border-radius: 999px;
             font-size: 0.92rem;
             font-weight: 700;
-            box-shadow: 0 0 15px rgba(255, 182, 193, 0.2);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.22);
             width: fit-content;
+            transition: var(--transition);
+            margin-bottom: 0.8rem;
+        }
+
+        .availability-badge:hover {
+            transform: scale(1.03);
+            background: rgba(16, 185, 129, 0.22);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .available-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #10B981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10B981;
+            animation: availablePulse 2s infinite;
+        }
+
+        .badge-sub-pill {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.12rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: #A7F3D0;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            margin-left: 0.25rem;
+        }
+
+        @keyframes availablePulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.75);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        /* ==========================================================
+           PROJECT CATEGORY FILTER TABS (STEP 2)
+           ========================================================== */
+        .project-filter-tabs {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            background: rgba(255, 182, 193, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .filter-tab i {
+            color: var(--pink-primary);
+            font-size: 0.82rem;
+            transition: transform 0.3s ease;
+        }
+
+        .filter-tab:hover {
+            color: #FFF;
+            background: rgba(255, 182, 193, 0.18);
+            border-color: var(--pink-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.25);
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-hot));
+            color: #000;
+            border-color: transparent;
+            font-weight: 800;
+            box-shadow: 0 4px 18px rgba(255, 105, 180, 0.45);
+        }
+
+        .filter-tab.active i {
+            color: #000;
+        }
+
+        /* Project Card Animation for Filters */
+        .project-card {
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ==========================================================
+           PROJECT KEY METRICS BADGES (STEP 3)
+           ========================================================== */
+        .project-metrics-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin: 0.4rem 0 0.85rem 0;
+        }
+
+        .metric-pill {
+            background: rgba(255, 105, 180, 0.12);
+            border: 1px solid rgba(255, 105, 180, 0.28);
+            color: var(--pink-soft);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            letter-spacing: 0.02em;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.1);
+        }
+
+        .metric-pill i {
+            color: var(--pink-hot);
+            font-size: 0.72rem;
+        }
+
+        /* ==========================================================
+           MUSIC PLAYER TRACK SWITCHER & CONTROLS (STEP 4)
+           ========================================================== */
+        .music-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .music-ctrl-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
             transition: var(--transition);
         }
 
-        .pulse-badge:hover {
-            transform: scale(1.03);
-            background: rgba(255, 182, 193, 0.22);
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+        .music-ctrl-btn:hover {
+            background: rgba(255, 182, 193, 0.25);
+            color: #FFF;
+            border-color: var(--pink-primary);
+            transform: scale(1.12);
         }
 
-        .pulse-dot {
-            width: 9px;
-            height: 9px;
-            background-color: var(--pink-hot);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--pink-hot);
-            animation: pulse 2s infinite;
+        /* ==========================================================
+           ENGINEERING HIGHLIGHTS & STRENGTHS WIDGET (STEP 5)
+           ========================================================== */
+        .strengths-widget {
+            padding: 2rem 2.4rem;
+            background: linear-gradient(135deg, rgba(25, 22, 30, 0.9), rgba(18, 16, 22, 0.85));
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(255, 105, 180, 0.7);
-            }
+        .strengths-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+        }
 
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(255, 105, 180, 0);
+        @media (max-width: 900px) {
+            .strengths-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
             }
+        }
 
-            100% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(255, 105, 180, 0);
-            }
+        .strength-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .strength-icon-wrap {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 12px;
+            background: rgba(255, 105, 180, 0.12);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
+            transition: var(--transition);
+        }
+
+        .strength-item:hover .strength-icon-wrap {
+            transform: scale(1.1) rotate(6deg);
+            background: rgba(255, 105, 180, 0.25);
+            border-color: var(--pink-hot);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.45);
+        }
+
+        .strength-title {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .strength-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            font-weight: 600;
         }
 
         /* Section Titles */
@@ -2016,8 +2210,10 @@
 
                 <!-- Hero Bio Card -->
                 <div class="bento-card col-span-8 hero-main scroll-reveal">
-                    <div class="pulse-badge">
-                        <span class="pulse-dot"></span> Open to Software Engineering Roles
+                    <div class="availability-badge" title="Open for Full-Time & Internship Opportunities">
+                        <span class="available-dot"></span>
+                        <span>Available for SDE & Full-Stack Roles</span>
+                        <span class="badge-sub-pill">2026 / 2027</span>
                     </div>
                     <h1 class="hero-title">
                         Software Engineering with <br>
@@ -2153,7 +2349,7 @@
                     </div>
                 </div>
 
-                <!-- Interactive Music & Current Activity Widget -->
+                <!-- Interactive Music & Current Activity Widget with Track Switcher -->
                 <div class="bento-card col-span-4 music-widget-container scroll-reveal" id="musicWidgetCard"
                     title="Click to Play / Pause Music">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -2164,7 +2360,7 @@
                             style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">○ CLICK TO
                             PLAY</span>
                     </div>
-                    <div class="music-widget" onclick="toggleMusic(event)" style="cursor: pointer;">
+                    <div class="music-widget">
                         <div class="music-left">
                             <div class="equalizer" id="mainEqualizer">
                                 <div class="eq-bar"></div>
@@ -2180,32 +2376,98 @@
                                     Lo-Fi Chill</div>
                             </div>
                         </div>
-                        <div class="music-play-btn" id="musicPlayBtn" title="Play / Pause">
-                            <i class="fa-solid fa-play" id="musicIcon"></i>
+                        <div class="music-controls-group">
+                            <button type="button" class="music-ctrl-btn" id="musicPrevBtn" title="Previous Track"
+                                onclick="prevTrack(event)">
+                                <i class="fa-solid fa-backward-step"></i>
+                            </button>
+                            <div class="music-play-btn" id="musicPlayBtn" title="Play / Pause"
+                                onclick="toggleMusic(event)" style="cursor: pointer;">
+                                <i class="fa-solid fa-play" id="musicIcon"></i>
+                            </div>
+                            <button type="button" class="music-ctrl-btn" id="musicNextBtn" title="Next Track"
+                                onclick="nextTrack(event)">
+                                <i class="fa-solid fa-forward-step"></i>
+                            </button>
                         </div>
                     </div>
-                    <audio id="lofiAudio" preload="auto" loop
-                        src="https://cdn.pixabay.com/download/audio/2022/11/06/audio_c9769fb611.mp3?filename=lofi-relax-travel-by-wavecont-126243.mp3"></audio>
+                    <audio id="lofiAudio" preload="auto" loop></audio>
+                </div>
+
+                <!-- Engineering Strengths & Highlights Widget (12 Col) -->
+                <div class="bento-card col-span-12 strengths-widget scroll-reveal">
+                    <div class="strengths-grid">
+                        <div class="strength-item">
+                            <div class="strength-icon-wrap">
+                                <i class="fa-solid fa-bolt-lightning text-pink"></i>
+                            </div>
+                            <div>
+                                <h4 class="strength-title">Rapid Prototyping & Execution</h4>
+                                <p class="strength-desc">Transforms ideas into functional, responsive full-stack applications with clean API contracts and intuitive UI designs.</p>
+                            </div>
+                        </div>
+                        <div class="strength-item">
+                            <div class="strength-icon-wrap">
+                                <i class="fa-solid fa-diagram-project text-pink"></i>
+                            </div>
+                            <div>
+                                <h4 class="strength-title">DSA & Algorithmic Rigor</h4>
+                                <p class="strength-desc">Deep foundations across 190+ data structures & algorithms with NPTEL Elite certification in Java DSA from IIT Kharagpur.</p>
+                            </div>
+                        </div>
+                        <div class="strength-item">
+                            <div class="strength-icon-wrap">
+                                <i class="fa-solid fa-trophy text-pink"></i>
+                            </div>
+                            <div>
+                                <h4 class="strength-title">Hackathon & Team Leadership</h4>
+                                <p class="strength-desc">1st Place Winner at Think2Impact Workshop; Smart India Hackathon (SIH 2025) participant with proven agile teamwork.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- 2. FEATURED PROJECTS SECTION -->
+        <!-- 2. FEATURED PROJECTS SECTION WITH FILTER TABS -->
         <section id="projects">
             <div class="section-header scroll-reveal">
-                <span class="section-tag">♡ Highlighted Work</span>
-                <h2 class="section-title">Featured Projects</h2>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <span class="section-tag">♡ Highlighted Work</span>
+                        <h2 class="section-title">Featured Projects</h2>
+                    </div>
+                    <!-- Category Filter Tabs -->
+                    <div class="project-filter-tabs" id="projectFilters" role="tablist">
+                        <button type="button" class="filter-tab active" data-filter="all">
+                            <i class="fa-solid fa-sparkles"></i> All (4)
+                        </button>
+                        <button type="button" class="filter-tab" data-filter="fullstack">
+                            <i class="fa-solid fa-layer-group"></i> Full-Stack (2)
+                        </button>
+                        <button type="button" class="filter-tab" data-filter="ai">
+                            <i class="fa-solid fa-brain"></i> AI & ML (2)
+                        </button>
+                        <button type="button" class="filter-tab" data-filter="java">
+                            <i class="devicon-java-plain"></i> Java (1)
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div class="bento-grid">
+            <div class="bento-grid" id="projectGrid">
 
                 <!-- Project 1: Disaster SHEro Platform -->
-                <div class="bento-card col-span-6 project-card scroll-reveal">
+                <div class="bento-card col-span-6 project-card scroll-reveal" data-category="fullstack">
                     <div>
                         <div class="project-header">
                             <span class="project-type">Full Stack • Emergency Response</span>
                             <i class="fa-solid fa-shield-heart text-pink" style="font-size: 1.4rem;"></i>
+                        </div>
+                        <div class="project-metrics-row">
+                            <span class="metric-pill"><i class="fa-solid fa-tower-broadcast"></i> Real-Time Alerts</span>
+                            <span class="metric-pill"><i class="fa-solid fa-user-shield"></i> RBAC Permissions</span>
                         </div>
                         <h3 class="project-title">Disaster SHEro Platform</h3>
                         <p class="project-desc">
@@ -2229,11 +2491,16 @@
                 </div>
 
                 <!-- Project 2: LockedIn — AI Interview Platform -->
-                <div class="bento-card col-span-6 project-card scroll-reveal">
+                <div class="bento-card col-span-6 project-card scroll-reveal" data-category="fullstack ai">
                     <div>
                         <div class="project-header">
                             <span class="project-type">Full-Stack • Generative AI & Web Systems</span>
                             <i class="fa-solid fa-laptop-code text-pink" style="font-size: 1.4rem;"></i>
+                        </div>
+                        <div class="project-metrics-row">
+                            <span class="metric-pill"><i class="fa-solid fa-bolt"></i> 3000ms Loop Protection</span>
+                            <span class="metric-pill"><i class="fa-solid fa-code-compare"></i> 191+ Curated DSA</span>
+                            <span class="metric-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> Gemini AI</span>
                         </div>
                         <h3 class="project-title">LockedIn — AI Interview Platform</h3>
                         <p class="project-desc">
@@ -2259,11 +2526,15 @@
                 </div>
 
                 <!-- Project 3: Customizable Desktop Timer -->
-                <div class="bento-card col-span-6 project-card scroll-reveal">
+                <div class="bento-card col-span-6 project-card scroll-reveal" data-category="java">
                     <div>
                         <div class="project-header">
                             <span class="project-type">Java Desktop Utility • Concurrency</span>
                             <i class="fa-solid fa-stopwatch text-pink" style="font-size: 1.4rem;"></i>
+                        </div>
+                        <div class="project-metrics-row">
+                            <span class="metric-pill"><i class="fa-solid fa-microchip"></i> Multi-Threaded</span>
+                            <span class="metric-pill"><i class="fa-solid fa-layer-group"></i> Always-On-Top</span>
                         </div>
                         <h3 class="project-title">Customizable Desktop Timer</h3>
                         <p class="project-desc">
@@ -2286,11 +2557,15 @@
                 </div>
 
                 <!-- Project 4: Gramin Shield Payment App -->
-                <div class="bento-card col-span-6 project-card scroll-reveal">
+                <div class="bento-card col-span-6 project-card scroll-reveal" data-category="ai">
                     <div>
                         <div class="project-header">
                             <span class="project-type">AI & FinTech • Security</span>
                             <i class="fa-solid fa-robot text-pink" style="font-size: 1.4rem;"></i>
+                        </div>
+                        <div class="project-metrics-row">
+                            <span class="metric-pill"><i class="fa-solid fa-bullseye"></i> 94%+ Fraud Accuracy</span>
+                            <span class="metric-pill"><i class="fa-solid fa-wifi"></i> Offline Security</span>
                         </div>
                         <h3 class="project-title">Gramin Shield Payment App</h3>
                         <p class="project-desc">
@@ -3009,12 +3284,63 @@
         counterElements.forEach((el) => counterObserver.observe(el));
 
         /* ==========================================================
-           6. INTERACTIVE COZY CODING RAIN AUDIO ENGINE
+           6. INTERACTIVE MULTI-TRACK LO-FI AUDIO ENGINE & PLAYLIST
            ========================================================== */
+        const playlist = [
+            {
+                title: "Cozy Coding Rain",
+                subtext: "Ambient Lo-Fi Chill ☕",
+                src: "https://cdn.pixabay.com/download/audio/2022/11/06/audio_c9769fb611.mp3?filename=lofi-relax-travel-by-wavecont-126243.mp3"
+            },
+            {
+                title: "Midnight Deep Focus",
+                subtext: "Smooth Study Lo-Fi 🌙",
+                src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"
+            },
+            {
+                title: "Coffee & Code Vibes",
+                subtext: "Gentle Acoustic Chill 🌸",
+                src: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=lofi-chill-medium-version-159456.mp3"
+            }
+        ];
+        let currentTrackIndex = 0;
         let isAudioPlaying = false;
         let audioCtx = null;
         let lofiInterval = null;
         let chordStep = 0;
+
+        function loadTrack(index, autoPlay = true) {
+            currentTrackIndex = (index + playlist.length) % playlist.length;
+            const track = playlist[currentTrackIndex];
+            const titleEl = document.getElementById('musicTrackTitle');
+            const subtextEl = document.getElementById('musicSubtext');
+            const lofiAudio = document.getElementById('lofiAudio');
+
+            if (titleEl) titleEl.textContent = track.title;
+            if (subtextEl) subtextEl.textContent = track.subtext;
+
+            if (lofiAudio) {
+                lofiAudio.src = track.src;
+                lofiAudio.load();
+                if (autoPlay && isAudioPlaying) {
+                    lofiAudio.play().catch(() => startCozySynth());
+                }
+            }
+        }
+
+        function nextTrack(e) {
+            if (e) e.stopPropagation();
+            loadTrack(currentTrackIndex + 1, true);
+            showToast(`Now Playing: ${playlist[currentTrackIndex].title} 🎵`);
+            if (!isAudioPlaying) toggleMusic();
+        }
+
+        function prevTrack(e) {
+            if (e) e.stopPropagation();
+            loadTrack(currentTrackIndex - 1, true);
+            showToast(`Now Playing: ${playlist[currentTrackIndex].title} 🎵`);
+            if (!isAudioPlaying) toggleMusic();
+        }
 
         function toggleMusic(e) {
             if (e) e.stopPropagation();
@@ -3023,17 +3349,22 @@
             const musicStatusText = document.getElementById('musicStatusText');
             const musicSubtext = document.getElementById('musicSubtext');
             const lofiAudio = document.getElementById('lofiAudio');
+            const track = playlist[currentTrackIndex];
 
             if (!isAudioPlaying) {
                 isAudioPlaying = true;
+                if (!lofiAudio.src) {
+                    lofiAudio.src = track.src;
+                }
+
                 if (mainEqualizer) mainEqualizer.classList.add('playing');
                 if (musicIcon) musicIcon.className = 'fa-solid fa-pause';
                 if (musicStatusText) {
                     musicStatusText.textContent = '● PLAYING';
                     musicStatusText.style.color = 'var(--pink-hot)';
                 }
-                if (musicSubtext) musicSubtext.textContent = 'Cozy Rain Beats Playing 🌧️';
-                showToast("Playing Cozy Coding Rain 🌧️🎵");
+                if (musicSubtext) musicSubtext.textContent = track.subtext;
+                showToast(`Playing ${track.title} 🎵✨`);
 
                 // Initialize AudioContext
                 try {
@@ -3076,12 +3407,11 @@
                     musicStatusText.textContent = '○ PAUSED';
                     musicStatusText.style.color = 'var(--text-muted)';
                 }
-                if (musicSubtext) musicSubtext.textContent = 'Ambient Lo-Fi Chill';
                 showToast("Music Paused ⏸");
             }
         }
 
-        // Procedural Cozy Coding Rain Synth (Cmaj7 -> Am7 -> Dm7 -> G7)
+        // Procedural Cozy Coding Rain Synth Fallback
         function startCozySynth() {
             if (lofiInterval || !isAudioPlaying) return;
             try {
@@ -3153,6 +3483,40 @@
                 lofiInterval = null;
             }
         }
+
+        /* ==========================================================
+           7. PROJECT CATEGORY FILTER TABS
+           ========================================================== */
+        (function initProjectFilters() {
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            const projectCards = document.querySelectorAll('#projectGrid .project-card');
+
+            filterTabs.forEach((tab) => {
+                tab.addEventListener('click', () => {
+                    filterTabs.forEach((t) => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    const filterValue = tab.getAttribute('data-filter');
+
+                    projectCards.forEach((card) => {
+                        const categories = (card.getAttribute('data-category') || '').split(' ');
+                        if (filterValue === 'all' || categories.includes(filterValue)) {
+                            card.style.display = 'flex';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'scale(1)';
+                            }, 10);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 250);
+                        }
+                    });
+                });
+            });
+        })();
 
         /* ==========================================================
            7. CONTACT FORM SUBMISSION VIA FORMSPREE & CELEBRATION
