@@ -24,6 +24,19 @@ A high-performance personal engineering portfolio built with Vanilla HTML5, CSS3
 
 ---
 
+## 📂 Repository Structure
+```text
+├── assets/
+│   ├── images/         # Profile and background design assets
+│   └── resume/         # Latest Resume (PDF)
+├── certificates/       # Verified credential certificates & workshop honors (PDF)
+├── index.html          # Main portfolio site entry (GitHub Pages)
+├── Portfolio_Vinutha.html
+└── README.md
+```
+
+---
+
 ## 📬 Connect with Vinutha
 - **Email**: [vinuthaa1010@gmail.com](mailto:vinuthaa1010@gmail.com)
 - **LinkedIn**: [linkedin.com/in/vinutha-90803a3b2](https://www.linkedin.com/in/vinutha-90803a3b2/)
